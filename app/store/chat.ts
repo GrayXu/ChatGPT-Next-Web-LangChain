@@ -106,9 +106,11 @@ function getSummarizeModel(currentModel: string) {
   const model = DEFAULT_MODELS.find((m) => m.name === currentModel);
   console.log("model", model);
   if (!model) return currentModel;
-  if (model.provider.providerType === "google") return GEMINI_SUMMARIZE_MODEL;
+  // if (model.provider.providerType === "google") return GEMINI_SUMMARIZE_MODEL;
+
+  // ALWAYS USE GPT-3.5-TURBO TO SUMMARIZE
   // if it is using gpt-* models, force to use 3.5 to summarize
-  if (currentModel.startsWith("gpt")) {
+  // if (currentModel.startsWith("gpt")) {
     const configStore = useAppConfig.getState();
     const accessStore = useAccessStore.getState();
     const allModel = collectModelsWithDefaultModel(
@@ -120,10 +122,10 @@ function getSummarizeModel(currentModel: string) {
       (m) => m.name === SUMMARIZE_MODEL && m.available,
     );
     return summarizeModel?.name ?? currentModel;
-  }
-  if (currentModel.startsWith("gemini")) {
-    return GEMINI_SUMMARIZE_MODEL;
-  }
+  // }
+  // if (currentModel.startsWith("gemini")) {
+  //   return GEMINI_SUMMARIZE_MODEL;
+  // }
   return currentModel;
 }
 
