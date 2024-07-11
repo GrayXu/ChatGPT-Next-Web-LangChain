@@ -101,32 +101,21 @@ function createEmptySession(): ChatSession {
 }
 
 function getSummarizeModel(currentModel: string) {
-  // if the current model does not exist in the default model
-  // example azure services cannot use SUMMARIZE_MODEL
-  const model = DEFAULT_MODELS.find((m) => m.name === currentModel);
-  console.log("model", model);
-  if (!model) return currentModel;
-  // if (model.provider.providerType === "google") return GEMINI_SUMMARIZE_MODEL;
-
-  // ALWAYS USE GPT-3.5-TURBO TO SUMMARIZE
-  // if it is using gpt-* models, force to use 3.5 to summarize
-  // if (currentModel.startsWith("gpt")) {
-    const configStore = useAppConfig.getState();
-    const accessStore = useAccessStore.getState();
-    const allModel = collectModelsWithDefaultModel(
-      configStore.models,
-      [configStore.customModels, accessStore.customModels].join(","),
-      accessStore.defaultModel,
-    );
-    const summarizeModel = allModel.find(
-      (m) => m.name === SUMMARIZE_MODEL && m.available,
-    );
-    return summarizeModel?.name ?? currentModel;
+  // const envModel = process.env.S_MODEL;
+  // if (envModel) {
+  //   return envModel;
   // }
-  // if (currentModel.startsWith("gemini")) {
-  //   return GEMINI_SUMMARIZE_MODEL;
-  // }
-  return currentModel;
+  const configStore = useAppConfig.getState();
+  const accessStore = useAccessStore.getState();
+  const allModel = collectModelsWithDefaultModel(
+    configStore.models,
+    [configStore.customModels, accessStore.customModels].join(","),
+    accessStore.defaultModel,
+  );
+  const summarizeModel = allModel.find(
+    (m) => m.name === SUMMARIZE_MODEL && m.available,
+  );
+  return summarizeModel?.name ?? currentModel;
 }
 
 function countMessages(msgs: ChatMessage[]) {
@@ -695,7 +684,10 @@ ${file.partial}
           api.llm.chat({
             messages: topicMessages,
             config: {
-              model: getSummarizeModel(session.mask.modelConfig.model),
+              model:
+                process.env.S_MODEL && process.env.S_MODEL.trim() !== ""
+                  ? process.env.S_MODEL
+                  : getSummarizeModel(session.mask.modelConfig.model),
               stream: false,
             },
             onFinish(message) {
