@@ -187,7 +187,9 @@ Latex inline: \\(x^2\\)
 Latex block: $$e=mc^2$$
 `;
 
-export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
+// export const SUMMARIZE_MODEL = "gpt-4o-mini";
+// export const SUMMARIZE_MODEL = "internlm/internlm2_5-7b-chat";
+export const SUMMARIZE_MODEL = "google/gemma-2-9b-it";
 export const GEMINI_SUMMARIZE_MODEL = "gemini-pro";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
@@ -363,6 +365,7 @@ export const MAX_RENDER_MSG_COUNT = 45;
 // some famous webdav endpoints
 export const internalAllowedWebDavEndpoints = [
   "https://dav.jianguoyun.com/dav/",
+  "https://nas.grayxu.cn:12345/webdav/",
   "https://dav.dropdav.com/",
   "https://dav.box.com/dav",
   "https://nanao.teracloud.jp/dav/",
